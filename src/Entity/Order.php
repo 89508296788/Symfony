@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -17,11 +19,23 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\Column]
-    private ?int $cartId = null;
+    /**
+     * @var Collection<int, Cart>
+     */
+    #[ORM\OneToMany(targetEntity: Cart::class, mappedBy: '——order')]
+    private Collection $cart_id;
 
-    #[ORM\Column]
-    private ?int $clientId = null;
+    /**
+     * @var Collection<int, Client>
+     */
+    #[ORM\OneToMany(targetEntity: Client::class, mappedBy: 'client_order')]
+    private Collection $client_id;
+
+    public function __construct()
+    {
+        $this->cart_id = new ArrayCollection();
+        $this->client_id = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -47,26 +61,62 @@ class Order
         return $this;
     }
 
-    public function getCartId(): ?int
+    /**
+     * @return Collection<int, Cart>
+     */
+    public function getCartId(): Collection
     {
-        return $this->cartId;
+        return $this->cart_id;
     }
 
-    public function setCartId(int $cartId): static
+    public function addCartId(Cart $cartId): static
     {
-        $this->cartId = $cartId;
+        if (!$this->cart_id->contains($cartId)) {
+            $this->cart_id->add($cartId);
+            $cartId->set——order($this);
+        }
 
         return $this;
     }
 
-    public function getClientId(): ?int
+    public function removeCartId(Cart $cartId): static
     {
-        return $this->clientId;
+        if ($this->cart_id->removeElement($cartId)) {
+            // set the owning side to null (unless already changed)
+            if ($cartId->get——order() === $this) {
+                $cartId->set——order(null);
+            }
+        }
+
+        return $this;
     }
 
-    public function setClientId(int $clientId): static
+    /**
+     * @return Collection<int, Client>
+     */
+    public function getClientId(): Collection
     {
-        $this->clientId = $clientId;
+        return $this->client_id;
+    }
+
+    public function addClientId(Client $clientId): static
+    {
+        if (!$this->client_id->contains($clientId)) {
+            $this->client_id->add($clientId);
+            $clientId->setClientOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClientId(Client $clientId): static
+    {
+        if ($this->client_id->removeElement($clientId)) {
+            // set the owning side to null (unless already changed)
+            if ($clientId->getClientOrder() === $this) {
+                $clientId->setClientOrder(null);
+            }
+        }
 
         return $this;
     }

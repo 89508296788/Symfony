@@ -19,6 +19,9 @@ class Product
     #[ORM\Column]
     private ?float $price = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cart_id')]
+    private ?CartItem $cartItem = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class Product
     public function setPrice(float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getCartItem(): ?CartItem
+    {
+        return $this->cartItem;
+    }
+
+    public function setCartItem(?CartItem $cartItem): static
+    {
+        $this->cartItem = $cartItem;
 
         return $this;
     }

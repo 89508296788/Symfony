@@ -28,6 +28,9 @@ class Client
     #[ORM\Column(length: 255)]
     private ?string $login = null;
 
+    #[ORM\ManyToOne(inversedBy: 'client_id')]
+    private ?Order $client_order = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,6 +99,18 @@ class Client
     public function setLogin(string $login): static
     {
         $this->login = $login;
+
+        return $this;
+    }
+
+    public function getClientOrder(): ?Order
+    {
+        return $this->client_order;
+    }
+
+    public function setClientOrder(?Order $client_order): static
+    {
+        $this->client_order = $client_order;
 
         return $this;
     }

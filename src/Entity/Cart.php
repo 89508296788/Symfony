@@ -16,6 +16,9 @@ class Cart
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cart_id')]
+    private ?Order $ÑÑorder = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +32,18 @@ class Cart
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getÑÑorder(): ?Order
+    {
+        return $this->ÑÑorder;
+    }
+
+    public function setÑÑorder(?Order $ÑÑorder): static
+    {
+        $this->ÑÑorder = $ÑÑorder;
 
         return $this;
     }
