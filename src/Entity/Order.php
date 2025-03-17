@@ -19,11 +19,8 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    /**
-     * @var Collection<int, Cart>
-     */
-    #[ORM\OneToMany(targetEntity: Cart::class, mappedBy: '��order')]
-    private Collection $cart_id;
+    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'orders')]
+    private ?Cart $cart = null;
 
     /**
      * @var Collection<int, Client>
@@ -33,7 +30,6 @@ class Order
 
     public function __construct()
     {
-        $this->cart_id = new ArrayCollection();
         $this->client_id = new ArrayCollection();
     }
 
@@ -61,32 +57,14 @@ class Order
         return $this;
     }
 
-    /**
-     * @return Collection<int, Cart>
-     */
-    public function getCartId(): Collection
+    public function getCart(): ?Cart
     {
-        return $this->cart_id;
+        return $this->cart;
     }
 
-    public function addCartId(Cart $cartId): static
+    public function setCart(?Cart $cart): static
     {
-        if (!$this->cart_id->contains($cartId)) {
-            $this->cart_id->add($cartId);
-            $cartId->setorder($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCartId(Cart $cartId): static
-    {
-        if ($this->cart_id->removeElement($cartId)) {
-            // set the owning side to null (unless already changed)
-            if ($cartId->getorder() === $this) {
-                $cartId->setorder(null);
-            }
-        }
+        $this->cart = $cart;
 
         return $this;
     }
