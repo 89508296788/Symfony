@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CartRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CartRepository::class)]
@@ -18,15 +16,12 @@ class Cart
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'cart')]
-    private Collection $orders;
+    #[ORM\OneToOne(targetEntity: Order::class, mappedBy: 'cart')]
+    private ?Order $order = null;
 
     public function __construct()
     {
-        $this->orders = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -46,32 +41,14 @@ class Cart
         return $this;
     }
 
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
+    public function getOrder(): ?Order
     {
-        return $this->orders;
+        return $this->order;
     }
 
-    public function addOrder(Order $order): static
+    public function setOrder(?Order $order): static
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setCart($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): static
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getCart() === $this) {
-                $order->setCart(null);
-            }
-        }
+        $this->order = $order;
 
         return $this;
     }

@@ -19,7 +19,8 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'orders')]
+    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'order')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
 
     /**
