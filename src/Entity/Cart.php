@@ -17,7 +17,7 @@ class Cart
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'cart_id')]
-    private ?Order $ÑÑorder = null;
+    private ?Order $order = null;
 
     public function getId(): ?int
     {
@@ -36,14 +36,14 @@ class Cart
         return $this;
     }
 
-    public function getÑÑorder(): ?Order
+    public function getorder(): ?Order
     {
-        return $this->ÑÑorder;
+        return $this->order;
     }
 
-    public function setÑÑorder(?Order $ÑÑorder): static
+    public function setorder(?Order $order): static
     {
-        $this->ÑÑorder = $ÑÑorder;
+        $this->order = $order;
 
         return $this;
     }

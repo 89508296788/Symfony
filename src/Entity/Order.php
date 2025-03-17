@@ -22,7 +22,7 @@ class Order
     /**
      * @var Collection<int, Cart>
      */
-    #[ORM\OneToMany(targetEntity: Cart::class, mappedBy: 'ÑÑorder')]
+    #[ORM\OneToMany(targetEntity: Cart::class, mappedBy: 'ï¿½ï¿½order')]
     private Collection $cart_id;
 
     /**
@@ -73,7 +73,7 @@ class Order
     {
         if (!$this->cart_id->contains($cartId)) {
             $this->cart_id->add($cartId);
-            $cartId->setÑÑorder($this);
+            $cartId->setorder($this);
         }
 
         return $this;
@@ -83,8 +83,8 @@ class Order
     {
         if ($this->cart_id->removeElement($cartId)) {
             // set the owning side to null (unless already changed)
-            if ($cartId->getÑÑorder() === $this) {
-                $cartId->setÑÑorder(null);
+            if ($cartId->getorder() === $this) {
+                $cartId->setorder(null);
             }
         }
 

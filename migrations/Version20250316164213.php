@@ -26,9 +26,9 @@ final class Version20250316164213 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_C7440455A3795DFD ON client (client_order_id)');
         $this->addSql('CREATE TABLE "order" (id INT NOT NULL, status VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('ALTER TABLE client ADD CONSTRAINT FK_C7440455A3795DFD FOREIGN KEY (client_order_id) REFERENCES "order" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE cart ADD ÑÑorder_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE cart ADD CONSTRAINT FK_BA388B7B8986B2A FOREIGN KEY (ÑÑorder_id) REFERENCES "order" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('CREATE INDEX IDX_BA388B7B8986B2A ON cart (ÑÑorder_id)');
+        $this->addSql('ALTER TABLE cart ADD order_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE cart ADD CONSTRAINT FK_BA388B7B8986B2A FOREIGN KEY (order_id) REFERENCES "order" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE INDEX IDX_BA388B7B8986B2A ON cart (order_id)');
         $this->addSql('ALTER TABLE product ADD cart_item_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE product ADD CONSTRAINT FK_D34A04ADE9B59A59 FOREIGN KEY (cart_item_id) REFERENCES cart_item (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_D34A04ADE9B59A59 ON product (cart_item_id)');
@@ -45,7 +45,7 @@ final class Version20250316164213 extends AbstractMigration
         $this->addSql('DROP TABLE client');
         $this->addSql('DROP TABLE "order"');
         $this->addSql('DROP INDEX IDX_BA388B7B8986B2A');
-        $this->addSql('ALTER TABLE cart DROP ÑÑorder_id');
+        $this->addSql('ALTER TABLE cart DROP order_id');
         $this->addSql('ALTER TABLE product DROP CONSTRAINT FK_D34A04ADE9B59A59');
         $this->addSql('DROP INDEX IDX_D34A04ADE9B59A59');
         $this->addSql('ALTER TABLE product DROP cart_item_id');
