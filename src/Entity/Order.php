@@ -17,7 +17,7 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'orders')]
+    #[ORM\OneToOne(inversedBy: 'order', targetEntity: Cart::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
 
@@ -57,6 +57,10 @@ class Order
     public function setCart(?Cart $cart): static
     {
         $this->cart = $cart;
+
+        if ($cart !== null && $cart->getOrder() !== $this) {
+            $cart->setOrder($this);
+        }
 
         return $this;
     }

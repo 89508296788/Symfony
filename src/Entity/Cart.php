@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CartRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CartRepository::class)]
@@ -16,14 +18,18 @@ class Cart
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\OneToOne(targetEntity: Order::class, mappedBy: 'cart')]
+    #[ORM\OneToOne(mappedBy: 'cart', targetEntity: Order::class)]
     private ?Order $order = null;
 
     /**
      * @var Collection<int, CartItem>
      */
-    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart')]
+    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart', orphanRemoval: true, cascade: ['persist'])]
     private Collection $cartItems;
+
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'carts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Client $client = null;
 
     public function __construct()
     {
@@ -55,6 +61,14 @@ class Cart
 
     public function setOrder(?Order $order): static
     {
+        if ($order === null && $this->order !== null) {
+            $this->order->setCart(null);
+        }
+
+        if ($order !== null && $order->getCart() !== $this) {
+            $order->setCart($this);
+        }
+
         $this->order = $order;
 
         return $this;
@@ -81,11 +95,22 @@ class Cart
     public function removeCartItem(CartItem $cartItem): static
     {
         if ($this->cartItems->removeElement($cartItem)) {
-            // set the owning side to null (unless already changed)
             if ($cartItem->getCart() === $this) {
                 $cartItem->setCart(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): static
+    {
+        $this->client = $client;
 
         return $this;
     }

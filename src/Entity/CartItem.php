@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CartItemRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CartItemRepository::class)]
@@ -22,10 +20,9 @@ class CartItem
     #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
 
-    public function __construct()
-    {
-        $this->cart_id = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Product::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Product $product = null;
 
     public function getId(): ?int
     {
@@ -52,6 +49,18 @@ class CartItem
     public function setCart(?Cart $cart): static
     {
         $this->cart = $cart;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): static
+    {
+        $this->product = $product;
 
         return $this;
     }
