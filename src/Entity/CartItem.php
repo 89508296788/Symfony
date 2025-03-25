@@ -18,14 +18,9 @@ class CartItem
     #[ORM\Column]
     private ?int $quantity = null;
 
-    #[ORM\ManyToOne]
-    private ?Product $product = null;
-
-    /**
-     * @var Collection<int, Product>
-     */
-    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'cartItem')]
-    private Collection $cart_id;
+    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'cartItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Cart $cart = null;
 
     public function __construct()
     {
@@ -49,44 +44,14 @@ class CartItem
         return $this;
     }
 
-    public function getProduct(): ?Product
+    public function getCart(): ?Cart
     {
-        return $this->product;
+        return $this->cart;
     }
 
-    public function setProduct(?Product $product): static
+    public function setCart(?Cart $cart): static
     {
-        $this->product = $product;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getCartId(): Collection
-    {
-        return $this->cart_id;
-    }
-
-    public function addCartId(Product $cartId): static
-    {
-        if (!$this->cart_id->contains($cartId)) {
-            $this->cart_id->add($cartId);
-            $cartId->setCartItem($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCartId(Product $cartId): static
-    {
-        if ($this->cart_id->removeElement($cartId)) {
-            // set the owning side to null (unless already changed)
-            if ($cartId->getCartItem() === $this) {
-                $cartId->setCartItem(null);
-            }
-        }
+        $this->cart = $cart;
 
         return $this;
     }
